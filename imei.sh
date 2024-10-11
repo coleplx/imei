@@ -205,7 +205,7 @@ elif [ -d "$WORK_DIR" ] && [ "$(ls -A $WORK_DIR)" ]; then
 fi
 
 if [ -z "$BUILD_DIR" ]; then
-  BUILD_DIR=/usr/local
+  BUILD_DIR=/usr/local/imei
 fi
 
 if [ -z "$CONFIG_DIR" ]; then
@@ -232,7 +232,7 @@ OS_ARCH="$(uname -m)"
 GH_FILE_BASE="https://codeload.github.com"
 GL_FILE_BASE="https://gitlab.com"
 SOURCE_LIST="/etc/apt/sources.list.d/imei.list"
-LIB_DIR="/usr/local"
+LIB_DIR="/usr/local/imei"
 CMAKE_VERSION="0.0.0"
 
 # Colors
@@ -1079,19 +1079,6 @@ install_imagemagick() {
 
           if [ "$TCMALLOC_C" == "with" ]; then
             REQUIRES="${REQUIRES},libtcmalloc-minimal4"
-          fi
-
-          if [[ ${FSTRANS:-"no"} == "yes" ]]; then
-            # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=717778
-            # checkinstall's fix on installwatch.in was reverted at some point, causing ImageMagick's install to fail
-            # We must manually create these directories to "trick" checkinstall's validation
-            mkdir -p "${BUILD_DIR}/include/ImageMagick-${MAIN_VER}"
-            IM_VER_WORKAROUND="${IMAGEMAGICK_VER%-*}"
-            IM_MODULES_DIR="modules-Q${QUANTUM_DEPTH}HDRI"
-            if [[ -n $DISABLE_HDRI ]]; then
-              IM_MODULES_DIR="modules-Q${QUANTUM_DEPTH}"
-            fi
-            mkdir -p "${BUILD_DIR}/lib/ImageMagick-${IM_VER_WORKAROUND}/${IM_MODULES_DIR}"
           fi
 
           echo "image manipulation programs (IMEI v$INSTALLER_VER)" >>description-pak &&
